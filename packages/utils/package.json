@@ -28,6 +28,7 @@
     "build": "run-p build:pack build:types",
     "build:dev": "run-s build",
     "build:pack": "yarn ts-node scripts/buildRollup.ts",
+    "build:pack:uncached": "yarn ts-node scripts/buildRollup.ts",
     "build:types": "tsc -p tsconfig.types.json",
     "build:watch": "run-p build:pack:watch build:types:watch",
     "build:dev:watch": "run-s build:watch",

@@ -23,15 +23,15 @@
       "dependsOn": [
         "build:pack"
       ],
-      "outputs": [
-        "{projectRoot}/build"
-      ]
+      "outputs": []
     },
     "build:pack": {
       "dependsOn": [
         "build:types",
+        "build:pack:uncached",
         "^build:pack",
-        "^build:types"
+        "^build:types",
+        "^build:pack:uncached"
       ],
       "outputs": [
         "{projectRoot}/build/npm",
@@ -55,20 +55,6 @@
         "dependsOn": [],
         "outputs": [
           "{projectRoot}/build/aws"
-        ]
-      }
-    },
-    "@sentry/utils": {
-      "build:pack": {
-        "dependsOn": [
-          "^build:pack",
-          "^build:types"
-        ],
-        "outputs": [
-          "{projectRoot}/build/esm",
-          "{projectRoot}/build/cjs",
-          "{projectRoot}/esm",
-          "{projectRoot}/cjs"
         ]
       }
     }
