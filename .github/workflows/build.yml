@@ -426,7 +426,7 @@ jobs:
           NODE_VERSION: ${{ matrix.node }}
         run: |
           [[ $NODE_VERSION == 8 ]] && yarn add --dev --ignore-engines --ignore-scripts --ignore-workspace-root-check ts-node@8.10.2  lerna@3.13.4
-          [[ $NODE_VERSION < 14 ]] && [[ $NODE_VERSION > 8 ]] && yarn add --dev --no-lockfile --ignore-workspace-root-check lerna@3.13.4
+          [[ $NODE_VERSION == 10 || $NODE_VERSION == 12 ]] && yarn add --dev --no-lockfile --ignore-workspace-root-check lerna@3.13.4
           yarn test-ci-node
       - name: Compute test coverage
         uses: codecov/codecov-action@v3
