@@ -7,7 +7,6 @@
           "build:bundle",
           "build:pack",
           "build:tarball",
-          "build:extras",
           "build:types"
         ]
       }
@@ -41,16 +40,9 @@
         "{projectRoot}/build/cjs"
       ]
     },
-    "build:extras": {
-      "dependsOn": [
-        "^build:pack"
-      ],
-      "outputs": [
-        "{projectRoot}/build"
-      ]
-    },
     "build:types": {
       "dependsOn": [
+        "^build:pack",
         "^build:types"
       ],
       "outputs": [
@@ -65,6 +57,20 @@
         "dependsOn": [],
         "outputs": [
           "{projectRoot}/build/aws"
+        ]
+      }
+    },
+    "@sentry/utils": {
+      "build:pack": {
+        "dependsOn": [
+          "^build:pack",
+          "^build:types"
+        ],
+        "outputs": [
+          "{projectRoot}/build/esm",
+          "{projectRoot}/build/cjs",
+          "{projectRoot}/esm",
+          "{projectRoot}/cjs"
         ]
       }
     }
