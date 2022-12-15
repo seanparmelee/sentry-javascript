@@ -179,6 +179,8 @@ jobs:
         with:
           path: node_modules/.cache/nx
           key: nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
+          # GH will use the first restore-key it finds that matches
+          # So it will start by looking for one from the same branch, else take the newest one it can find elsewhere
           restore-keys: |
             nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
             nx-${{ runner.os }}-${{ github.ref }}
