@@ -344,7 +344,7 @@ jobs:
           path: ${{ env.CACHED_BUILD_PATHS }}
           key: ${{ env.BUILD_CACHE_KEY }}
       - name: Pack
-        run: yarn build:npm
+        run: yarn build:tarball
       - name: Archive artifacts
         uses: actions/upload-artifact@v3.1.1
         with:
