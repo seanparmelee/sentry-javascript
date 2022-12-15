@@ -178,7 +178,11 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules/.cache/nx
-          key: ${{ runner.os }}-nx
+          key: nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
+          restore-keys: |
+            nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
+            nx-${{ runner.os }}-${{ github.ref }}
+            nx-${{ runner.os }}
       - name: Build packages
         # Under normal circumstances, using the git SHA as a cache key, there shouldn't ever be a cache hit on the built
         # packages, and so `yarn build` should always run. This `if` check is therefore only there for testing CI issues
