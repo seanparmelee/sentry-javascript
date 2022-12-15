@@ -423,11 +423,9 @@ jobs:
           key: ${{ env.BUILD_CACHE_KEY }}
       - name: Run tests
         env:
-          NEEDS_OLD_TS_NODE: ${{ matrix.node == 8 }}
-          NEEDS_OLD_LERNA: ${{ matrix.node > 8 && matrix.node < 14 }}
+          NODE_VERSION: ${{ matrix.node }}
         run: |
-          [[ $NEEDS_OLD_TS_NODE == true ]] && yarn add --dev --ignore-engines --ignore-scripts --ignore-workspace-root-check ts-node@8.10.2  lerna@3.13.4
-          [[ $NEEDS_OLD_LERNA == true ]] && yarn add --dev --no-lockfile --ignore-workspace-root-check lerna@3.13.4
+          [[ $NODE_VERSION == 8 ]] && yarn add --dev --ignore-engines --ignore-scripts --ignore-workspace-root-check ts-node@8.10.2
           yarn test-ci-node
       - name: Compute test coverage
         uses: codecov/codecov-action@v3
