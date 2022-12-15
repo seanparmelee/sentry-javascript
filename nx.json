@@ -21,7 +21,6 @@
     },
     "build:tarball": {
       "dependsOn": [
-        "build:pack",
         "^build:pack",
         "^build:types"
       ],
