@@ -21,8 +21,7 @@
     },
     "build:tarball": {
       "dependsOn": [
-        "^build:pack",
-        "^build:types"
+        "build:pack"
       ],
       "outputs": [
         "{projectRoot}/build"
@@ -30,6 +29,7 @@
     },
     "build:pack": {
       "dependsOn": [
+        "build:types",
         "^build:pack",
         "^build:types"
       ],
@@ -41,7 +41,6 @@
     },
     "build:types": {
       "dependsOn": [
-        "^build:pack",
         "^build:types"
       ],
       "outputs": [
