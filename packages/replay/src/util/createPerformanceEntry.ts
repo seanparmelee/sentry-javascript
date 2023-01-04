@@ -1,8 +1,8 @@
 import { browserPerformanceTimeOrigin } from '@sentry/utils';
 import { record } from 'rrweb';
 
-import { WINDOW } from './constants';
-import type { AllPerformanceEntry, PerformanceNavigationTiming, PerformancePaintTiming } from './types';
+import { WINDOW } from '../constants';
+import type { AllPerformanceEntry, PerformanceNavigationTiming, PerformancePaintTiming } from '../types';
 
 export interface ReplayPerformanceEntry {
   /**

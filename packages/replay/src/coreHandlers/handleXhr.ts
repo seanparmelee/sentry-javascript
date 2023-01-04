@@ -1,5 +1,5 @@
-import { ReplayPerformanceEntry } from '../createPerformanceEntry';
 import type { ReplayContainer } from '../types';
+import { ReplayPerformanceEntry } from '../util/createPerformanceEntry';
 import { createPerformanceSpans } from '../util/createPerformanceSpans';
 import { shouldFilterRequest } from '../util/shouldFilterRequest';
 

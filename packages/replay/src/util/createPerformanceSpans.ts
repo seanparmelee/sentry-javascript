@@ -1,8 +1,8 @@
 import { EventType } from 'rrweb';
 
-import { ReplayPerformanceEntry } from '../createPerformanceEntry';
 import type { ReplayContainer } from '../types';
 import { addEvent } from './addEvent';
+import { ReplayPerformanceEntry } from './createPerformanceEntry';
 
 /**
  * Create a "span" for each performance entry. The parent transaction is `this.replayEvent`.

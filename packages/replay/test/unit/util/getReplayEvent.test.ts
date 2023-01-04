@@ -6,7 +6,7 @@ import { REPLAY_EVENT_NAME } from '../../../src/constants';
 import { getReplayEvent } from '../../../src/util/getReplayEvent';
 import { getDefaultBrowserClientOptions } from '../../utils/getDefaultBrowserClientOptions';
 
-describe('getReplayEvent', () => {
+describe('Unit | util | getReplayEvent', () => {
   let hub: Hub;
   let client: Client;
   let scope: Scope;
