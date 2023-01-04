@@ -932,11 +932,13 @@ export class ReplayContainer implements ReplayContainerInterface {
       ...(includeReplayStartTimestamp ? { replay_start_timestamp: initialTimestamp / 1000 } : {}),
       timestamp: currentTimestamp / 1000,
       error_ids: errorIds,
+      error_sample_rate: this._options.errorSampleRate,
       trace_ids: traceIds,
       urls,
       replay_id: replayId,
-      segment_id,
       replay_type: this.session?.sampled,
+      segment_id,
+      session_sample_rate: this._options.sessionSampleRate,
     };
 
     const replayEvent = await getReplayEvent({ scope, client, event: baseEvent });
@@ -947,12 +949,6 @@ export class ReplayContainer implements ReplayContainerInterface {
       __DEBUG_BUILD__ && logger.log('An event processor returned `null`, will not send event.');
       return;
     }
-
-    replayEvent.tags = {
-      ...replayEvent.tags,
-      sessionSampleRate: this._options.sessionSampleRate,
-      errorSampleRate: this._options.errorSampleRate,
-    };
 
     /*
     For reference, the fully built event looks something like this:
@@ -971,6 +967,8 @@ export class ReplayContainer implements ReplayContainerInterface {
         "replay_id": "eventId",
         "segment_id": 3,
         "replay_type": "error",
+        "error_sample_rate": 1,
+        "session_sample_rate": 1,
         "platform": "javascript",
         "event_id": "generated-uuid",
         "environment": "production",
@@ -983,10 +981,7 @@ export class ReplayContainer implements ReplayContainerInterface {
             "version": "7.25.0"
         },
         "sdkProcessingMetadata": {},
-        "tags": {
-            "sessionSampleRate": 1,
-            "errorSampleRate": 0,
-        }
+        "tags": {}
     }
     */
 

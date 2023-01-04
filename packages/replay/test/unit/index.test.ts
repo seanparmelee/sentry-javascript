@@ -789,11 +789,9 @@ describe('Replay', () => {
       replayEventPayload: expect.objectContaining({
         replay_start_timestamp: (BASE_TIMESTAMP - 10000) / 1000,
         urls: ['http://localhost/'], // this doesn't truly test if we are capturing the right URL as we don't change URLs, but good enough
+        error_sample_rate: 0,
         replay_type: 'session',
-        tags: expect.objectContaining({
-          errorSampleRate: 0,
-          sessionSampleRate: 1,
-        }),
+        session_sample_rate: 1,
       }),
     });
   });
