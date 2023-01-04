@@ -18,6 +18,9 @@ const MEDIA_SELECTORS = 'img,image,svg,path,rect,area,video,object,picture,embed
 
 let _initialized = false;
 
+/**
+ * The main replay integration class, to be passed to `init({  integrations: [] })`.
+ */
 export class Replay implements Integration {
   /**
    * @inheritDoc
@@ -35,6 +38,16 @@ export class Replay implements Integration {
   readonly recordingOptions: RecordingOptions;
 
   readonly options: ReplayPluginOptions;
+
+  /** If replay has already been initialized */
+  protected get _isInitialized(): boolean {
+    return _initialized;
+  }
+
+  /** Update _isInitialized */
+  protected set _isInitialized(value: boolean) {
+    _initialized = value;
+  }
 
   private _replay?: ReplayContainer;
 
@@ -181,6 +194,7 @@ Sentry.init({ replaysOnErrorSampleRate: ${errorSampleRate} })`,
     this._replay.stop();
   }
 
+  /** Setup the integration. */
   private _setup(): void {
     // Client is not available in constructor, so we need to wait until setupOnce
     this._loadReplayOptionsFromClient();
