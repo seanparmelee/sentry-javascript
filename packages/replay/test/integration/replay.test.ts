@@ -15,10 +15,10 @@ import type { RecordingEvent } from '../../src/types';
 import { addEvent } from '../../src/util/addEvent';
 import { createPerformanceSpans } from '../../src/util/createPerformanceSpans';
 import { useFakeTimers } from '../utils/use-fake-timers';
-import { PerformanceEntryResource } from './../fixtures/performanceEntry/resource';
-import { BASE_TIMESTAMP, RecordMock } from './../index';
-import { resetSdkMock } from './../mocks/resetSdkMock';
-import { DomHandler } from './../types';
+import { PerformanceEntryResource } from '../fixtures/performanceEntry/resource';
+import { BASE_TIMESTAMP, RecordMock } from '../index';
+import { resetSdkMock } from '../mocks/resetSdkMock';
+import { DomHandler } from '../types';
 
 useFakeTimers();
 
