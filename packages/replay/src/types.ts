@@ -1,4 +1,4 @@
-import { ReplayRecordingData } from '@sentry/types';
+import type { ReplayRecordingData } from '@sentry/types';
 
 import type { eventWithTime, recordOptions } from './types/rrweb';
 

@@ -1,4 +1,4 @@
-import { NextjsOptions } from '../../src/utils/nextjsOptions';
+import type { NextjsOptions } from '../../src/utils/nextjsOptions';
 import { applyTunnelRouteOption } from '../../src/utils/tunnelRoute';
 
 const globalWithInjectedValues = global as typeof global & {

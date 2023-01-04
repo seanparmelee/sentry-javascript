@@ -1,5 +1,7 @@
-import { getCurrentHub, Hub } from '@sentry/core';
-import { Event, Scope } from '@sentry/types';
+import type { Hub } from '@sentry/core';
+import { getCurrentHub } from '@sentry/core';
+import type { Scope } from '@sentry/types';
+import { Event } from '@sentry/types';
 import { EventType } from 'rrweb';
 
 import {
@@ -10,15 +12,16 @@ import {
   VISIBILITY_CHANGE_TIMEOUT,
   WINDOW,
 } from '../../src/constants';
-import { ReplayContainer } from '../../src/replay';
+import type { ReplayContainer } from '../../src/replay';
 import type { RecordingEvent } from '../../src/types';
 import { addEvent } from '../../src/util/addEvent';
 import { createPerformanceSpans } from '../../src/util/createPerformanceSpans';
 import { useFakeTimers } from '../utils/use-fake-timers';
 import { PerformanceEntryResource } from './../fixtures/performanceEntry/resource';
-import { BASE_TIMESTAMP, RecordMock } from './../index';
+import type { RecordMock } from './../index';
+import { BASE_TIMESTAMP } from './../index';
 import { resetSdkMock } from './../mocks/resetSdkMock';
-import { DomHandler } from './../types';
+import type { DomHandler } from './../types';
 
 useFakeTimers();
 

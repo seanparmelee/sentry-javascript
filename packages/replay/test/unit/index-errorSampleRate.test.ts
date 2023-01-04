@@ -2,11 +2,12 @@ import { captureException } from '@sentry/core';
 
 import { DEFAULT_FLUSH_MIN_DELAY, REPLAY_SESSION_KEY, VISIBILITY_CHANGE_TIMEOUT, WINDOW } from '../../src/constants';
 import { addEvent } from '../../src/util/addEvent';
-import { ReplayContainer } from './../../src/replay';
+import type { ReplayContainer } from './../../src/replay';
 import { PerformanceEntryResource } from './../fixtures/performanceEntry/resource';
-import { BASE_TIMESTAMP, RecordMock } from './../index';
+import type { RecordMock } from './../index';
+import { BASE_TIMESTAMP } from './../index';
 import { resetSdkMock } from './../mocks/resetSdkMock';
-import { DomHandler } from './../types';
+import type { DomHandler } from './../types';
 import { useFakeTimers } from './../utils/use-fake-timers';
 
 useFakeTimers();

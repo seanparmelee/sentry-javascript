@@ -1,4 +1,4 @@
-import { Event } from '@sentry/types';
+import type { Event } from '@sentry/types';
 
 export function isRrwebError(event: Event): boolean {
   if (event.type || !event.exception?.values?.length) {

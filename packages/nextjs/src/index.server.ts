@@ -1,16 +1,18 @@
-import { Carrier, getHubFromCarrier, getMainCarrier } from '@sentry/core';
+import type { Carrier } from '@sentry/core';
+import { getHubFromCarrier, getMainCarrier } from '@sentry/core';
 import { RewriteFrames } from '@sentry/integrations';
 import { configureScope, getCurrentHub, init as nodeInit, Integrations } from '@sentry/node';
 import { hasTracingEnabled } from '@sentry/tracing';
-import { EventProcessor } from '@sentry/types';
+import type { EventProcessor } from '@sentry/types';
 import { escapeStringForRegex, logger } from '@sentry/utils';
 import * as domainModule from 'domain';
 import * as path from 'path';
 
 import { isBuild } from './utils/isBuild';
 import { buildMetadata } from './utils/metadata';
-import { NextjsOptions } from './utils/nextjsOptions';
-import { addOrUpdateIntegration, IntegrationWithExclusionOption } from './utils/userIntegrations';
+import type { NextjsOptions } from './utils/nextjsOptions';
+import type { IntegrationWithExclusionOption } from './utils/userIntegrations';
+import { addOrUpdateIntegration } from './utils/userIntegrations';
 
 export * from '@sentry/node';
 export { captureUnderscoreErrorException } from './utils/_error';

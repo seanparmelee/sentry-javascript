@@ -1,4 +1,4 @@
-import {
+import type {
   Envelope,
   EnvelopeItem,
   EnvelopeItemType,
@@ -9,6 +9,7 @@ import {
   Transport,
   TransportRequestExecutor,
 } from '@sentry/types';
+import type { PromiseBuffer, RateLimits } from '@sentry/utils';
 import {
   createEnvelope,
   envelopeItemTypeToDataCategory,
@@ -16,8 +17,6 @@ import {
   isRateLimited,
   logger,
   makePromiseBuffer,
-  PromiseBuffer,
-  RateLimits,
   resolvedSyncPromise,
   SentryError,
   serializeEnvelope,

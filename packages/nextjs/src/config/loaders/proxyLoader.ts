@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { rollupize } from './rollup';
-import { LoaderThis } from './types';
+import type { LoaderThis } from './types';
 
 type LoaderOptions = {
   pagesDir: string;

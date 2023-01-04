@@ -1,12 +1,12 @@
 import { RewriteFrames } from '@sentry/integrations';
 import { configureScope, init as reactInit, Integrations } from '@sentry/react';
 import { BrowserTracing, defaultRequestInstrumentationOptions, hasTracingEnabled } from '@sentry/tracing';
-import { EventProcessor } from '@sentry/types';
+import type { EventProcessor } from '@sentry/types';
 import { logger } from '@sentry/utils';
 
 import { nextRouterInstrumentation } from './performance/client';
 import { buildMetadata } from './utils/metadata';
-import { NextjsOptions } from './utils/nextjsOptions';
+import type { NextjsOptions } from './utils/nextjsOptions';
 import { applyTunnelRouteOption } from './utils/tunnelRoute';
 import { addOrUpdateIntegration } from './utils/userIntegrations';
 

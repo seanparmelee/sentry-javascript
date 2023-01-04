@@ -1,9 +1,9 @@
 import * as SentryUtils from '@sentry/utils';
 
 import { SESSION_IDLE_DURATION, WINDOW } from '../../src/constants';
-import { ReplayContainer } from '../../src/replay';
+import type { ReplayContainer } from '../../src/replay';
 import { addEvent } from '../../src/util/addEvent';
-import { Replay } from './../../src';
+import type { Replay } from './../../src';
 // mock functions need to be imported first
 import { BASE_TIMESTAMP, mockRrweb, mockSdk } from './../index';
 import { useFakeTimers } from './../utils/use-fake-timers';

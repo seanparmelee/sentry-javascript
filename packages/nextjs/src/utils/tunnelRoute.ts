@@ -1,6 +1,6 @@
 import { dsnFromString, logger } from '@sentry/utils';
 
-import { NextjsOptions } from './nextjsOptions';
+import type { NextjsOptions } from './nextjsOptions';
 
 const globalWithInjectedValues = global as typeof global & {
   __sentryRewritesTunnelPath__?: string;

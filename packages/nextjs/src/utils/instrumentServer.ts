@@ -10,10 +10,10 @@ import {
   stripUrlQueryAndFragment,
 } from '@sentry/utils';
 import * as domain from 'domain';
-import * as http from 'http';
+import type * as http from 'http';
 import { default as createNextServer } from 'next';
-import * as querystring from 'querystring';
-import * as url from 'url';
+import type * as querystring from 'querystring';
+import type * as url from 'url';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PlainObject<T = any> = { [key: string]: T };

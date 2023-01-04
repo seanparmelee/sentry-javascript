@@ -1,5 +1,6 @@
-import { prepareEvent, Scope } from '@sentry/core';
-import { Client, ReplayEvent } from '@sentry/types';
+import type { Scope } from '@sentry/core';
+import { prepareEvent } from '@sentry/core';
+import type { Client, ReplayEvent } from '@sentry/types';
 
 export async function getReplayEvent({
   client,
