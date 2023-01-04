@@ -1,17 +1,261 @@
+diff --git a/node_modules/rrweb/es/rrweb/packages/rrweb-snapshot/es/rrweb-snapshot.js b/node_modules/rrweb/es/rrweb/packages/rrweb-snapshot/es/rrweb-snapshot.js
+index 2259070..4649e4d 100644
+--- a/node_modules/rrweb/es/rrweb/packages/rrweb-snapshot/es/rrweb-snapshot.js
++++ b/node_modules/rrweb/es/rrweb/packages/rrweb-snapshot/es/rrweb-snapshot.js
+@@ -17,10 +17,14 @@ function isShadowRoot(n) {
+     return Boolean(host && host.shadowRoot && host.shadowRoot === n);
+ }
+ function maskInputValue(_a) {
+-    var maskInputOptions = _a.maskInputOptions, tagName = _a.tagName, type = _a.type, value = _a.value, maskInputFn = _a.maskInputFn;
++    var input = _a.input, maskInputSelector = _a.maskInputSelector, unmaskInputSelector = _a.unmaskInputSelector, maskInputOptions = _a.maskInputOptions, tagName = _a.tagName, type = _a.type, value = _a.value, maskInputFn = _a.maskInputFn;
+     var text = value || '';
++    if (unmaskInputSelector && input.matches(unmaskInputSelector)) {
++        return text;
++    }
+     if (maskInputOptions[tagName.toLowerCase()] ||
+-        maskInputOptions[type]) {
++        maskInputOptions[type] ||
++        (maskInputSelector && input.matches(maskInputSelector))) {
+         if (maskInputFn) {
+             text = maskInputFn(text);
+         }
+@@ -266,11 +270,16 @@ function _isBlockedElement(element, blockClass, blockSelector) {
+     }
+     return false;
+ }
+-function needMaskingText(node, maskTextClass, maskTextSelector) {
++function needMaskingText(node, maskTextClass, maskTextSelector, unmaskTextSelector) {
+     if (!node) {
+         return false;
+     }
+     if (node.nodeType === node.ELEMENT_NODE) {
++        if (unmaskTextSelector) {
++            if (node.matches(unmaskTextSelector) || node.closest(unmaskTextSelector)) {
++                return false;
++            }
++        }
+         if (typeof maskTextClass === 'string') {
+             if (node.classList.contains(maskTextClass)) {
+                 return true;
+@@ -289,12 +298,12 @@ function needMaskingText(node, maskTextClass, maskTextSelector) {
+                 return true;
+             }
+         }
+-        return needMaskingText(node.parentNode, maskTextClass, maskTextSelector);
++        return needMaskingText(node.parentNode, maskTextClass, maskTextSelector, unmaskTextSelector);
+     }
+     if (node.nodeType === node.TEXT_NODE) {
+-        return needMaskingText(node.parentNode, maskTextClass, maskTextSelector);
++        return needMaskingText(node.parentNode, maskTextClass, maskTextSelector, unmaskTextSelector);
+     }
+-    return needMaskingText(node.parentNode, maskTextClass, maskTextSelector);
++    return needMaskingText(node.parentNode, maskTextClass, maskTextSelector, unmaskTextSelector);
+ }
+ function onceIframeLoaded(iframeEl, listener, iframeLoadTimeout) {
+     var win = iframeEl.contentWindow;
+@@ -334,7 +343,7 @@ function onceIframeLoaded(iframeEl, listener, iframeLoadTimeout) {
+ }
+ function serializeNode(n, options) {
+     var _a;
+-    var doc = options.doc, blockClass = options.blockClass, blockSelector = options.blockSelector, maskTextClass = options.maskTextClass, maskTextSelector = options.maskTextSelector, inlineStylesheet = options.inlineStylesheet, _b = options.maskInputOptions, maskInputOptions = _b === void 0 ? {} : _b, maskTextFn = options.maskTextFn, maskInputFn = options.maskInputFn, _c = options.dataURLOptions, dataURLOptions = _c === void 0 ? {} : _c, inlineImages = options.inlineImages, recordCanvas = options.recordCanvas, keepIframeSrcFn = options.keepIframeSrcFn;
++    var doc = options.doc, blockClass = options.blockClass, blockSelector = options.blockSelector, maskTextClass = options.maskTextClass, maskTextSelector = options.maskTextSelector, unmaskTextSelector = options.unmaskTextSelector, inlineStylesheet = options.inlineStylesheet, maskInputSelector = options.maskInputSelector, unmaskInputSelector = options.unmaskInputSelector, _b = options.maskInputOptions, maskInputOptions = _b === void 0 ? {} : _b, maskTextFn = options.maskTextFn, maskInputFn = options.maskInputFn, _c = options.dataURLOptions, dataURLOptions = _c === void 0 ? {} : _c, inlineImages = options.inlineImages, recordCanvas = options.recordCanvas, keepIframeSrcFn = options.keepIframeSrcFn;
+     var rootId;
+     if (doc.__sn) {
+         var docId = doc.__sn.id;
+@@ -407,9 +416,12 @@ function serializeNode(n, options) {
+                     attributes_1.type !== 'button' &&
+                     value) {
+                     attributes_1.value = maskInputValue({
++                        input: n,
+                         type: attributes_1.type,
+                         tagName: tagName,
+                         value: value,
++                        maskInputSelector: maskInputSelector,
++                        unmaskInputSelector: unmaskInputSelector,
+                         maskInputOptions: maskInputOptions,
+                         maskInputFn: maskInputFn
+                     });
+@@ -528,7 +540,7 @@ function serializeNode(n, options) {
+             }
+             if (!isStyle &&
+                 !isScript &&
+-                needMaskingText(n, maskTextClass, maskTextSelector) &&
++                needMaskingText(n, maskTextClass, maskTextSelector, unmaskTextSelector) &&
+                 textContent) {
+                 textContent = maskTextFn
+                     ? maskTextFn(textContent)
+@@ -636,7 +648,7 @@ function slimDOMExcluded(sn, slimDOMOptions) {
+     return false;
+ }
+ function serializeNodeWithId(n, options) {
+-    var doc = options.doc, map = options.map, blockClass = options.blockClass, blockSelector = options.blockSelector, maskTextClass = options.maskTextClass, maskTextSelector = options.maskTextSelector, _a = options.skipChild, skipChild = _a === void 0 ? false : _a, _b = options.inlineStylesheet, inlineStylesheet = _b === void 0 ? true : _b, _c = options.maskInputOptions, maskInputOptions = _c === void 0 ? {} : _c, maskTextFn = options.maskTextFn, maskInputFn = options.maskInputFn, slimDOMOptions = options.slimDOMOptions, _d = options.dataURLOptions, dataURLOptions = _d === void 0 ? {} : _d, _e = options.inlineImages, inlineImages = _e === void 0 ? false : _e, _f = options.recordCanvas, recordCanvas = _f === void 0 ? false : _f, onSerialize = options.onSerialize, onIframeLoad = options.onIframeLoad, _g = options.iframeLoadTimeout, iframeLoadTimeout = _g === void 0 ? 5000 : _g, _h = options.keepIframeSrcFn, keepIframeSrcFn = _h === void 0 ? function () { return false; } : _h;
++    var doc = options.doc, map = options.map, blockClass = options.blockClass, blockSelector = options.blockSelector, maskTextClass = options.maskTextClass, maskTextSelector = options.maskTextSelector, unmaskTextSelector = options.unmaskTextSelector, _a = options.skipChild, skipChild = _a === void 0 ? false : _a, _b = options.inlineStylesheet, inlineStylesheet = _b === void 0 ? true : _b, maskInputSelector = options.maskInputSelector, unmaskInputSelector = options.unmaskInputSelector, _c = options.maskInputOptions, maskInputOptions = _c === void 0 ? {} : _c, maskTextFn = options.maskTextFn, maskInputFn = options.maskInputFn, slimDOMOptions = options.slimDOMOptions, _d = options.dataURLOptions, dataURLOptions = _d === void 0 ? {} : _d, _e = options.inlineImages, inlineImages = _e === void 0 ? false : _e, _f = options.recordCanvas, recordCanvas = _f === void 0 ? false : _f, onSerialize = options.onSerialize, onIframeLoad = options.onIframeLoad, _g = options.iframeLoadTimeout, iframeLoadTimeout = _g === void 0 ? 5000 : _g, _h = options.keepIframeSrcFn, keepIframeSrcFn = _h === void 0 ? function () { return false; } : _h;
+     var _j = options.preserveWhiteSpace, preserveWhiteSpace = _j === void 0 ? true : _j;
+     var _serializedNode = serializeNode(n, {
+         doc: doc,
+@@ -644,7 +656,10 @@ function serializeNodeWithId(n, options) {
+         blockSelector: blockSelector,
+         maskTextClass: maskTextClass,
+         maskTextSelector: maskTextSelector,
++        unmaskTextSelector: unmaskTextSelector,
+         inlineStylesheet: inlineStylesheet,
++        maskInputSelector: maskInputSelector,
++        unmaskInputSelector: unmaskInputSelector,
+         maskInputOptions: maskInputOptions,
+         maskTextFn: maskTextFn,
+         maskInputFn: maskInputFn,
+@@ -702,8 +717,11 @@ function serializeNodeWithId(n, options) {
+             blockSelector: blockSelector,
+             maskTextClass: maskTextClass,
+             maskTextSelector: maskTextSelector,
++            unmaskTextSelector: unmaskTextSelector,
+             skipChild: skipChild,
+             inlineStylesheet: inlineStylesheet,
++            maskInputSelector: maskInputSelector,
++            unmaskInputSelector: unmaskInputSelector,
+             maskInputOptions: maskInputOptions,
+             maskTextFn: maskTextFn,
+             maskInputFn: maskInputFn,
+@@ -750,8 +768,11 @@ function serializeNodeWithId(n, options) {
+                     blockSelector: blockSelector,
+                     maskTextClass: maskTextClass,
+                     maskTextSelector: maskTextSelector,
++                    unmaskTextSelector: unmaskTextSelector,
+                     skipChild: false,
+                     inlineStylesheet: inlineStylesheet,
++                    maskInputSelector: maskInputSelector,
++                    unmaskInputSelector: unmaskInputSelector,
+                     maskInputOptions: maskInputOptions,
+                     maskTextFn: maskTextFn,
+                     maskInputFn: maskInputFn,
+@@ -774,7 +795,7 @@ function serializeNodeWithId(n, options) {
+     return serializedNode;
+ }
+ function snapshot(n, options) {
+-    var _a = options || {}, _b = _a.blockClass, blockClass = _b === void 0 ? 'rr-block' : _b, _c = _a.blockSelector, blockSelector = _c === void 0 ? null : _c, _d = _a.maskTextClass, maskTextClass = _d === void 0 ? 'rr-mask' : _d, _e = _a.maskTextSelector, maskTextSelector = _e === void 0 ? null : _e, _f = _a.inlineStylesheet, inlineStylesheet = _f === void 0 ? true : _f, _g = _a.inlineImages, inlineImages = _g === void 0 ? false : _g, _h = _a.recordCanvas, recordCanvas = _h === void 0 ? false : _h, _j = _a.maskAllInputs, maskAllInputs = _j === void 0 ? false : _j, maskTextFn = _a.maskTextFn, maskInputFn = _a.maskInputFn, _k = _a.slimDOM, slimDOM = _k === void 0 ? false : _k, dataURLOptions = _a.dataURLOptions, preserveWhiteSpace = _a.preserveWhiteSpace, onSerialize = _a.onSerialize, onIframeLoad = _a.onIframeLoad, iframeLoadTimeout = _a.iframeLoadTimeout, _l = _a.keepIframeSrcFn, keepIframeSrcFn = _l === void 0 ? function () { return false; } : _l;
++    var _a = options || {}, _b = _a.blockClass, blockClass = _b === void 0 ? 'rr-block' : _b, _c = _a.blockSelector, blockSelector = _c === void 0 ? null : _c, _d = _a.maskTextClass, maskTextClass = _d === void 0 ? 'rr-mask' : _d, _e = _a.maskTextSelector, maskTextSelector = _e === void 0 ? null : _e, _f = _a.unmaskTextSelector, unmaskTextSelector = _f === void 0 ? null : _f, _g = _a.inlineStylesheet, inlineStylesheet = _g === void 0 ? true : _g, _h = _a.inlineImages, inlineImages = _h === void 0 ? false : _h, _j = _a.recordCanvas, recordCanvas = _j === void 0 ? false : _j, _k = _a.maskInputSelector, maskInputSelector = _k === void 0 ? null : _k, _l = _a.unmaskInputSelector, unmaskInputSelector = _l === void 0 ? null : _l, _m = _a.maskAllInputs, maskAllInputs = _m === void 0 ? false : _m, maskTextFn = _a.maskTextFn, maskInputFn = _a.maskInputFn, _o = _a.slimDOM, slimDOM = _o === void 0 ? false : _o, dataURLOptions = _a.dataURLOptions, preserveWhiteSpace = _a.preserveWhiteSpace, onSerialize = _a.onSerialize, onIframeLoad = _a.onIframeLoad, iframeLoadTimeout = _a.iframeLoadTimeout, _p = _a.keepIframeSrcFn, keepIframeSrcFn = _p === void 0 ? function () { return false; } : _p;
+     var idNodeMap = {};
+     var maskInputOptions = maskAllInputs === true
+         ? {
+@@ -825,8 +846,11 @@ function snapshot(n, options) {
+             blockSelector: blockSelector,
+             maskTextClass: maskTextClass,
+             maskTextSelector: maskTextSelector,
++            unmaskTextSelector: unmaskTextSelector,
+             skipChild: false,
+             inlineStylesheet: inlineStylesheet,
++            maskInputSelector: maskInputSelector,
++            unmaskInputSelector: unmaskInputSelector,
+             maskInputOptions: maskInputOptions,
+             maskTextFn: maskTextFn,
+             maskInputFn: maskInputFn,
 diff --git a/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/index.js b/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/index.js
-index 8091399..48e8321 100644
+index 8091399..f82d462 100644
 --- a/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/index.js
 +++ b/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/index.js
-@@ -325,7 +325,11 @@ function record(options) {
-             }, hooks);
-         };
-         iframeManager.addLoadListener(function (iframeEl) {
--            handlers_1.push(observe_1(iframeEl.contentDocument));
-+            try {
-+                handlers_1.push(observe_1(iframeEl.contentDocument));
-+            } catch (error) {
-+                console.warn('error in rrweb iframe observer', error);
-+            }
-         });
-         var init_1 = function () {
-             takeFullSnapshot();
+@@ -15,7 +15,7 @@ var takeFullSnapshot;
+ var mirror = createMirror();
+ function record(options) {
+     if (options === void 0) { options = {}; }
+-    var emit = options.emit, checkoutEveryNms = options.checkoutEveryNms, checkoutEveryNth = options.checkoutEveryNth, _a = options.blockClass, blockClass = _a === void 0 ? 'rr-block' : _a, _b = options.blockSelector, blockSelector = _b === void 0 ? null : _b, _c = options.ignoreClass, ignoreClass = _c === void 0 ? 'rr-ignore' : _c, _d = options.maskTextClass, maskTextClass = _d === void 0 ? 'rr-mask' : _d, _e = options.maskTextSelector, maskTextSelector = _e === void 0 ? null : _e, _f = options.inlineStylesheet, inlineStylesheet = _f === void 0 ? true : _f, maskAllInputs = options.maskAllInputs, _maskInputOptions = options.maskInputOptions, _slimDOMOptions = options.slimDOMOptions, maskInputFn = options.maskInputFn, maskTextFn = options.maskTextFn, hooks = options.hooks, packFn = options.packFn, _g = options.sampling, sampling = _g === void 0 ? {} : _g, mousemoveWait = options.mousemoveWait, _h = options.recordCanvas, recordCanvas = _h === void 0 ? false : _h, _j = options.userTriggeredOnInput, userTriggeredOnInput = _j === void 0 ? false : _j, _k = options.collectFonts, collectFonts = _k === void 0 ? false : _k, _l = options.inlineImages, inlineImages = _l === void 0 ? false : _l, plugins = options.plugins, _m = options.keepIframeSrcFn, keepIframeSrcFn = _m === void 0 ? function () { return false; } : _m;
++    var emit = options.emit, checkoutEveryNms = options.checkoutEveryNms, checkoutEveryNth = options.checkoutEveryNth, _a = options.blockClass, blockClass = _a === void 0 ? 'rr-block' : _a, _b = options.blockSelector, blockSelector = _b === void 0 ? null : _b, _c = options.ignoreClass, ignoreClass = _c === void 0 ? 'rr-ignore' : _c, _d = options.maskTextClass, maskTextClass = _d === void 0 ? 'rr-mask' : _d, _e = options.maskTextSelector, maskTextSelector = _e === void 0 ? null : _e, _f = options.maskInputSelector, maskInputSelector = _f === void 0 ? null : _f, _g = options.unmaskTextSelector, unmaskTextSelector = _g === void 0 ? null : _g, _h = options.unmaskInputSelector, unmaskInputSelector = _h === void 0 ? null : _h, _j = options.inlineStylesheet, inlineStylesheet = _j === void 0 ? true : _j, maskAllInputs = options.maskAllInputs, _maskInputOptions = options.maskInputOptions, _slimDOMOptions = options.slimDOMOptions, maskInputFn = options.maskInputFn, maskTextFn = options.maskTextFn, hooks = options.hooks, packFn = options.packFn, _k = options.sampling, sampling = _k === void 0 ? {} : _k, mousemoveWait = options.mousemoveWait, _l = options.recordCanvas, recordCanvas = _l === void 0 ? false : _l, _m = options.userTriggeredOnInput, userTriggeredOnInput = _m === void 0 ? false : _m, _o = options.collectFonts, collectFonts = _o === void 0 ? false : _o, _p = options.inlineImages, inlineImages = _p === void 0 ? false : _p, plugins = options.plugins, _q = options.keepIframeSrcFn, keepIframeSrcFn = _q === void 0 ? function () { return false; } : _q;
+     if (!emit) {
+         throw new Error('emit function is required');
+     }
+@@ -148,6 +148,9 @@ function record(options) {
+             blockSelector: blockSelector,
+             maskTextClass: maskTextClass,
+             maskTextSelector: maskTextSelector,
++            unmaskTextSelector: unmaskTextSelector,
++            maskInputSelector: maskInputSelector,
++            unmaskInputSelector: unmaskInputSelector,
+             inlineStylesheet: inlineStylesheet,
+             maskInputOptions: maskInputOptions,
+             maskTextFn: maskTextFn,
+@@ -178,6 +181,9 @@ function record(options) {
+             blockSelector: blockSelector,
+             maskTextClass: maskTextClass,
+             maskTextSelector: maskTextSelector,
++            unmaskTextSelector: unmaskTextSelector,
++            maskInputSelector: maskInputSelector,
++            unmaskInputSelector: unmaskInputSelector,
+             inlineStylesheet: inlineStylesheet,
+             maskAllInputs: maskInputOptions,
+             maskTextFn: maskTextFn,
+@@ -293,6 +299,9 @@ function record(options) {
+                 ignoreClass: ignoreClass,
+                 maskTextClass: maskTextClass,
+                 maskTextSelector: maskTextSelector,
++                unmaskTextSelector: unmaskTextSelector,
++                maskInputSelector: maskInputSelector,
++                unmaskInputSelector: unmaskInputSelector,
+                 maskInputOptions: maskInputOptions,
+                 inlineStylesheet: inlineStylesheet,
+                 sampling: sampling,
+diff --git a/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/mutation.js b/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/mutation.js
+index fd183b9..18eaa0e 100644
+--- a/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/mutation.js
++++ b/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/mutation.js
+@@ -146,6 +146,9 @@ var MutationBuffer = (function () {
+                     blockSelector: _this.blockSelector,
+                     maskTextClass: _this.maskTextClass,
+                     maskTextSelector: _this.maskTextSelector,
++                    unmaskTextSelector: _this.unmaskTextSelector,
++                    maskInputSelector: _this.maskInputSelector,
++                    unmaskInputSelector: _this.unmaskInputSelector,
+                     skipChild: true,
+                     inlineStylesheet: _this.inlineStylesheet,
+                     maskInputOptions: _this.maskInputOptions,
+@@ -291,7 +294,7 @@ var MutationBuffer = (function () {
+                     var value = m.target.textContent;
+                     if (!isBlocked(m.target, _this.blockClass) && value !== m.oldValue) {
+                         _this.texts.push({
+-                            value: needMaskingText(m.target, _this.maskTextClass, _this.maskTextSelector) && value
++                            value: needMaskingText(m.target, _this.maskTextClass, _this.maskTextSelector, _this.unmaskTextSelector) && value
+                                 ? _this.maskTextFn
+                                     ? _this.maskTextFn(value)
+                                     : value.replace(/[\S]/g, '*')
+@@ -306,6 +309,9 @@ var MutationBuffer = (function () {
+                     var value = m.target.getAttribute(m.attributeName);
+                     if (m.attributeName === 'value') {
+                         value = maskInputValue({
++                            input: target,
++                            maskInputSelector: _this.maskInputSelector,
++                            unmaskInputSelector: _this.unmaskInputSelector,
+                             maskInputOptions: _this.maskInputOptions,
+                             tagName: m.target.tagName,
+                             type: m.target.getAttribute('type'),
+@@ -444,6 +450,9 @@ var MutationBuffer = (function () {
+             'blockSelector',
+             'maskTextClass',
+             'maskTextSelector',
++            'unmaskTextSelector',
++            'maskInputSelector',
++            'unmaskInputSelector',
+             'inlineStylesheet',
+             'maskInputOptions',
+             'maskTextFn',
+diff --git a/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/observer.js b/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/observer.js
+index 9895009..1dbf913 100644
+--- a/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/observer.js
++++ b/node_modules/rrweb/es/rrweb/packages/rrweb/src/record/observer.js
+@@ -198,7 +198,7 @@ function wrapEventWithUserTriggeredFlag(v, enable) {
+ var INPUT_TAGS = ['INPUT', 'TEXTAREA', 'SELECT'];
+ var lastInputValueMap = new WeakMap();
+ function initInputObserver(_a) {
+-    var inputCb = _a.inputCb, doc = _a.doc, mirror = _a.mirror, blockClass = _a.blockClass, ignoreClass = _a.ignoreClass, maskInputOptions = _a.maskInputOptions, maskInputFn = _a.maskInputFn, sampling = _a.sampling, userTriggeredOnInput = _a.userTriggeredOnInput;
++    var inputCb = _a.inputCb, doc = _a.doc, mirror = _a.mirror, blockClass = _a.blockClass, ignoreClass = _a.ignoreClass, maskInputSelector = _a.maskInputSelector, unmaskInputSelector = _a.unmaskInputSelector, maskInputOptions = _a.maskInputOptions, maskInputFn = _a.maskInputFn, sampling = _a.sampling, userTriggeredOnInput = _a.userTriggeredOnInput;
+     function eventHandler(event) {
+         var target = getEventTarget(event);
+         var userTriggered = event.isTrusted;
+@@ -222,7 +222,10 @@ function initInputObserver(_a) {
+         else if (maskInputOptions[target.tagName.toLowerCase()] ||
+             maskInputOptions[type]) {
+             text = maskInputValue({
++                input: target,
+                 maskInputOptions: maskInputOptions,
++                maskInputSelector: maskInputSelector,
++                unmaskInputSelector: unmaskInputSelector,
+                 tagName: target.tagName,
+                 type: type,
+                 value: text,

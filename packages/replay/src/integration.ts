@@ -55,6 +55,9 @@ export class Replay implements Integration {
     blockClass = 'sentry-block',
     ignoreClass = 'sentry-ignore',
     maskTextClass = 'sentry-mask',
+    maskInputSelector = '.sentry-mask',
+    unmaskInputSelector = '.sentry-unmask',
+    unmaskTextSelector = '.sentry-unmask',
     blockSelector = '[data-sentry-block]',
     ...recordingOptions
   }: ReplayConfiguration = {}) {
@@ -64,6 +67,9 @@ export class Replay implements Integration {
       ignoreClass,
       maskTextClass,
       maskTextSelector,
+      unmaskTextSelector,
+      unmaskInputSelector,
+      maskInputSelector,
       blockSelector,
       ...recordingOptions,
     };
