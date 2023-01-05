@@ -120,12 +120,6 @@ jobs:
       changed_browser: ${{ steps.changed.outputs.browser }}
       changed_browser_integration: ${{ steps.changed.outputs.browser_integration }}
       changed_any_code: ${{ steps.changed.outputs.any_code }}
-      is_master: ${{ github.ref == 'refs/heads/master' }}
-      is_release: ${{ startsWith(github.ref, 'refs/heads/release/') }}
-      skip_cache: |
-        github.ref != 'refs/heads/master'
-        && startsWith(github.ref, 'refs/heads/release/') == false
-        && github.event.pull_request.labels.contains('ci-skip-cache') == false
 
   job_install_deps:
     name: Install Dependencies
