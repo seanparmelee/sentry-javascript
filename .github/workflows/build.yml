@@ -184,9 +184,7 @@ jobs:
         # - on master
         # - on release branches
         # - when PR has `ci-skip-cache` label
-        if: |
-          github.ref != 'refs/heads/master'
-          && startsWith(github.ref, 'refs/heads/release/') == false
+        if: github.ref != 'refs/heads/master' && startsWith(github.ref, 'refs/heads/release/') == false
         with:
           path: node_modules/.cache/nx
           key: nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
