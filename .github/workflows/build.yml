@@ -148,13 +148,14 @@ jobs:
       - name: Check dependency cache
         uses: actions/cache@v3
         id: cache_dependencies
-        if: needs.job_get_metadata.outputs.force_skip_cache == false
+        if: needs.job_get_metadata.outputs.force_skip_cache == 'false'
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ steps.compute_lockfile_hash.outputs.hash }}
 
       - name: Install dependencies
-        if: steps.cache_dependencies.outputs.cache-hit == '' || needs.job_get_metadata.outputs.force_skip_cache
+        if:
+          steps.cache_dependencies.outputs.cache-hit == '' || needs.job_get_metadata.outputs.force_skip_cache == 'true'
         run: yarn install --ignore-engines --frozen-lockfile
     outputs:
       dependency_cache_key: ${{ steps.compute_lockfile_hash.outputs.hash }}
@@ -190,9 +191,9 @@ jobs:
         # - on release branches
         # - when PR has `ci-skip-cache` label
         if: |
-          needs.job_get_metadata.outputs.is_master == false &&
-          needs.job_get_metadata.outputs.is_release == false &&
-          needs.job_get_metadata.outputs.force_skip_cache == false
+          needs.job_get_metadata.outputs.is_master == 'false' &&
+          needs.job_get_metadata.outputs.is_release == 'false' &&
+          needs.job_get_metadata.outputs.force_skip_cache == 'false'
         with:
           path: node_modules/.cache/nx
           key: nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
@@ -261,7 +262,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-20.04
     # Size Check will error out outside of the context of a PR
-    if: github.event_name == 'pull_request' || needs.job_get_metadata.outputs.is_master
+    if: github.event_name == 'pull_request' || needs.job_get_metadata.outputs.is_master == 'true'
     steps:
       - name: Check out current commit (${{ needs.job_get_metadata.outputs.commit_label }})
         uses: actions/checkout@v3
