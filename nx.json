@@ -52,7 +52,7 @@
   "targets": {
     "@sentry/serverless": {
       "build:bundle": {
-        "dependsOn": [],
+        "dependsOn": ["^build:types"],
         "outputs": [
           "{projectRoot}/build/aws"
         ]
