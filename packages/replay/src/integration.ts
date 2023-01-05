@@ -39,16 +39,6 @@ export class Replay implements Integration {
 
   readonly options: ReplayPluginOptions;
 
-  /** If replay has already been initialized */
-  protected get _isInitialized(): boolean {
-    return _initialized;
-  }
-
-  /** Update _isInitialized */
-  protected set _isInitialized(value: boolean) {
-    _initialized = value;
-  }
-
   private _replay?: ReplayContainer;
 
   constructor({
@@ -139,10 +129,12 @@ Sentry.init({ replaysOnErrorSampleRate: ${errorSampleRate} })`,
     this._isInitialized = true;
   }
 
+  /** If replay has already been initialized */
   protected get _isInitialized(): boolean {
     return _initialized;
   }
 
+  /** Update _isInitialized */
   protected set _isInitialized(value: boolean) {
     _initialized = value;
   }
