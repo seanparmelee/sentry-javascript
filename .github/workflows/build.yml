@@ -123,7 +123,7 @@ jobs:
       is_master: ${{ github.ref == 'refs/heads/master' }}
       is_release: ${{ startsWith(github.ref, 'refs/heads/release/') }}
       force_skip_cache:
-        ${{ github.event_name == 'pull_request' && github.event.pull_request.labels.*.name.contains('ci-skip-cache') }}
+        ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci-skip-cache') }}
 
   job_install_deps:
     name: Install Dependencies
