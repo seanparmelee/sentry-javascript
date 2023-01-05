@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "build": "node ./scripts/verify-packages-versions.js && run-s build:pack build:bundle",
+    "build": "node ./scripts/verify-packages-versions.js && run-s build:types build:pack build:bundle",
     "build:bundle": "lerna run build:bundle",
-    "build:dev": "yarn build:pack",
+    "build:dev": "run-s build:types build:pack",
     "build:dev:filter": "lerna run build:dev --include-filtered-dependencies --include-filtered-dependents --scope",
     "build:pack": "lerna run build:pack",
     "build:types": "lerna run build:types",

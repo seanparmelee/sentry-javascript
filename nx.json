@@ -14,7 +14,7 @@
   },
   "targetDefaults": {
     "build:bundle": {
-      "dependsOn": ["^build:types"],
+      "dependsOn": [],
       "outputs": [
         "{projectRoot}/build/bundles"
       ]
@@ -27,10 +27,8 @@
     },
     "build:pack": {
       "dependsOn": [
-        "build:types",
         "build:pack:uncached",
         "^build:pack",
-        "^build:types",
         "^build:pack:uncached"
       ],
       "outputs": [
@@ -52,7 +50,7 @@
   "targets": {
     "@sentry/serverless": {
       "build:bundle": {
-        "dependsOn": ["^build:types"],
+        "dependsOn": [],
         "outputs": [
           "{projectRoot}/build/aws"
         ]
