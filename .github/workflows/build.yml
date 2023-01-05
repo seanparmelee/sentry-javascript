@@ -183,7 +183,7 @@ jobs:
         # - when PR has `ci-skip-cache` label
         if:
           github.ref != 'refs/heads/master' && !startsWith(github.ref, 'refs/heads/release/') &&
-          !github.event.pull_request.labels.contains('ci-skip-cache')
+          github.event.pull_request.labels.contains('ci-skip-cache') == false
         with:
           path: node_modules/.cache/nx
           key: nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
