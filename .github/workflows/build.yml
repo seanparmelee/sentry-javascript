@@ -174,8 +174,16 @@ jobs:
         with:
           path: ${{ env.CACHED_BUILD_PATHS }}
           key: ${{ env.BUILD_CACHE_KEY }}
+
       - name: NX cache
         uses: actions/cache@v3
+        # Disable cache when:
+        # - on master
+        # - on release branches
+        # - when PR has `ci-skip-cache` label
+        if:
+          github.ref != 'refs/heads/master' && !startsWith(github.ref, 'refs/heads/release/') &&
+          !github.event.pull_request.labels.contains('ci-skip-cache')
         with:
           path: node_modules/.cache/nx
           key: nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
@@ -185,6 +193,7 @@ jobs:
             nx-${{ runner.os }}-${{ github.ref }}-${{ env.HEAD_COMMIT }}
             nx-${{ runner.os }}-${{ github.ref }}
             nx-${{ runner.os }}
+
       - name: Build packages
         # Under normal circumstances, using the git SHA as a cache key, there shouldn't ever be a cache hit on the built
         # packages, and so `yarn build` should always run. This `if` check is therefore only there for testing CI issues
